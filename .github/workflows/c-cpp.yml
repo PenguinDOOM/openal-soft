@@ -11,20 +11,18 @@ jobs:
       matrix:
         config:
           -
-            name: "Visual Studio 2019 64-bit"
-            os: windows-latest
-            extra_options: "-A x64 -D"
-            qtarch: "win64_msvc2019_64"
-            qtdir: "Qt5Widgets_DIR:PATH=./Qt/5.15.0/msvc2019_64/lib/cmake/Qt5Widgets"
-            qtdll: "./Qt/5.15.0/msvc2019_64"
+            name: "Visual Studio 15 2017 Win64"
+            os: windows-2016
+            qtarch: "win64_msvc2017_64"
+            qtdir: "Qt5Widgets_DIR:PATH=./Qt/5.14.2/msvc2017_64/lib/cmake/Qt5Widgets"
+            qtdll: "./Qt/5.14.2/msvc2017_64"
             build_type: "Release"
           -
-            name: "Visual Studio 2019 32-bit"
-            os: windows-latest
-            extra_options: "-A Win32 -D"
-            qtarch: "win32_msvc2019"
-            qtdir: "Qt5Widgets_DIR:PATH=./Qt/5.15.0/msvc2019/lib/cmake/Qt5Widgets"
-            qtdll: "./Qt/5.15.0/msvc2019"
+            name: "Visual Studio 15 2017"
+            os: windows-2016
+            qtarch: "win32_msvc2017"
+            qtdir: "Qt5Widgets_DIR:PATH=./Qt/5.14.2/msvc2017/lib/cmake/Qt5Widgets"
+            qtdll: "./Qt/5.14.2/msvc2017"
             build_type: "Release"
 
     steps:
@@ -36,7 +34,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:
-        version: '5.15.0'
+        version: '5.14.2'
         host: 'windows'
         target: 'desktop'
         arch: '${{ matrix.config.qtarch }}'
@@ -45,7 +43,7 @@ jobs:
     - name: Configure
       shell: bash
       run: |
-        cmake -B ./build -G "Visual Studio 16 2019" -DALSOFT_BUILD_ROUTER=ON -DALSOFT_REQUIRE_WINMM=ON -DALSOFT_REQUIRE_DSOUND=ON -DALSOFT_REQUIRE_WASAPI=ON -DALSOFT_EMBED_HRTF_DATA=YES -DCMAKE_BUILD_TYPE:STRING=${{ matrix.config.build_type }} -DFORCE_STATIC_VCRT:BOOL=ON ${{ matrix.config.extra_options }}"${{ matrix.config.qtdir }}"
+        cmake -B ./build -G "${{ matrix.config.name }}" -DALSOFT_BUILD_ROUTER=ON -DALSOFT_REQUIRE_WINMM=ON -DALSOFT_REQUIRE_DSOUND=ON -DALSOFT_REQUIRE_WASAPI=ON -DALSOFT_EMBED_HRTF_DATA=YES -DCMAKE_BUILD_TYPE:STRING=${{ matrix.config.build_type }} -DFORCE_STATIC_VCRT:BOOL=ON -D"${{ matrix.config.qtdir }}"
 
     - name: Build
       shell: bash
