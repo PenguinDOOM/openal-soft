@@ -14,15 +14,17 @@ jobs:
             name: "Visual Studio 2019 64-bit"
             os: windows-latest
             extra_options: "-A x64 -D"
-            qt: "Qt5Widgets_DIR:PATH=C:/Qt/5.15.0/msvc2019_64/lib/cmake/Qt5Widgets"
-            qtdll: "C:/Qt/5.15.0/msvc2019_64"
+            qtarch: "win64_msvc2019_64"
+            qtdir: "Qt5Widgets_DIR:PATH=./Qt/5.15.0/msvc2019_64/lib/cmake/Qt5Widgets"
+            qtdll: "./Qt/5.15.0/msvc2019_64"
             build_type: "Release"
           -
             name: "Visual Studio 2019 32-bit"
             os: windows-latest
             extra_options: "-A Win32 -D"
-            qt: "Qt5Widgets_DIR:PATH=C:/Qt/5.15.0/msvc2019/lib/cmake/Qt5Widgets"
-            qtdll: "C:/Qt/5.15.0/msvc2019"
+            qtarch: "win32_msvc2019"
+            qtdir: "Qt5Widgets_DIR:PATH=./Qt/5.15.0/msvc2019/lib/cmake/Qt5Widgets"
+            qtdll: "./Qt/5.15.0/msvc2019"
             build_type: "Release"
 
     steps:
@@ -31,25 +33,34 @@ jobs:
       with:
         ref: master
 
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        version: '5.15.0'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2017_64'
+        dir: '${{ github.workspace }}/'
+
     - name: Configure
       shell: bash
       run: |
-        cmake -B ./build -G "Visual Studio 16 2019" -DALSOFT_BUILD_ROUTER=ON -DALSOFT_REQUIRE_WINMM=ON -DALSOFT_REQUIRE_DSOUND=ON -DALSOFT_REQUIRE_WASAPI=ON -DALSOFT_EMBED_HRTF_DATA=YES -DCMAKE_BUILD_TYPE:STRING=${{ matrix.config.build_type }} -DFORCE_STATIC_VCRT:BOOL=ON ${{ matrix.config.extra_options }}"${{ matrix.config.qt }}"..
-    
+        cmake -B ./build -G "Visual Studio 16 2019" -DALSOFT_BUILD_ROUTER=ON -DALSOFT_REQUIRE_WINMM=ON -DALSOFT_REQUIRE_DSOUND=ON -DALSOFT_REQUIRE_WASAPI=ON -DALSOFT_EMBED_HRTF_DATA=YES -DCMAKE_BUILD_TYPE:STRING=${{ matrix.config.build_type }} -DFORCE_STATIC_VCRT:BOOL=ON ${{ matrix.config.extra_options }}"${{ matrix.config.qtdir }}"
+
     - name: Build
       shell: bash
       run: |
-        cmake --build ./build . --config ${{ matrix.config.build_type }} --clean-first
-    
+        cmake --build ./build --config ${{ matrix.config.build_type }} --clean-first
+
     - name: Packing artifact
       shell: bash
       run: |
+        mkdir ./Build/Release/platforms
+        cp ${{ matrix.config.qtdll }}/bin/Qt5Core.dll ./Build/Release/
+        cp ${{ matrix.config.qtdll }}/bin/Qt5Gui.dll ./Build/Release/
+        cp ${{ matrix.config.qtdll }}/bin/Qt5Widgets.dll ./Build/Release/
+        cp ${{ matrix.config.qtdll }}/plugins/platforms/qwindows.dll ./Build/Release/platforms/
         cd ./Build/Release
-        mkdir platforms
-        cp ${{ matrix.config.qtdll }}/bin/Qt5Core.dll ./
-        cp ${{ matrix.config.qtdll }}/bin/Qt5Gui.dll ./
-        cp ${{ matrix.config.qtdll }}/bin/Qt5Widgets.dll ./
-        cp ${{ matrix.config.qtdll }}/plugins/platforms/qwindows.dll ./platforms/
         7z a -r -ssw -mx5 -t7z ${{ matrix.config.name }}_${{ matrix.config.build_type }}.7z
         cd ../../
 
