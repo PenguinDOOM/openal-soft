@@ -1508,9 +1508,9 @@ if(EXTRA_INSTALLS)
 endif()
 
 if(MSVC AND WIN32)
-    set(C_FLAGS ${C_FLAGS} /permissive- /GS /TP /analyze- /W4 /wd"4065" /wd"4268" /wd"4324" /wd"5030" /Zc:wchar_t /Gm- /O2 /Ob2 /Zc:inline /fp:precise /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /D "AL_BUILD_LIBRARY" /D "AL_ALEXT_PROTOTYPES" /D "_WIN32" /D "_CRT_SECURE_NO_WARNINGS" /D "NOMINMAX" /D "CMAKE_INTDIR=\"Release\"" /D "OpenAL_EXPORTS" /D "_WINDLL" /D "_MBCS" /errorReport:prompt /WX- /Zc:forScope /GR /arch:SSE2 /Gd /Oy- /MT /std:c++14 /EHsc /nologo /diagnostics:classic  /w14640)
+    set(C_FLAGS ${C_FLAGS} /permissive- /GS /TP /analyze- /W4 /wd"4065" /wd"4268" /wd"4324" /wd"5030" /Zc:wchar_t /Gm- /O2 /Ob2 /Zc:inline /fp:precise /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /D "AL_BUILD_LIBRARY" /D "AL_ALEXT_PROTOTYPES" /D "_WIN32" /D "_CRT_SECURE_NO_WARNINGS" /D "NOMINMAX" /D "CMAKE_INTDIR=\"Release\"" /D "OpenAL_EXPORTS" /D "_WINDLL" /D "_MBCS" /errorReport:prompt /WX- /Zc:forScope /GR /arch:SSE2 /Gd /Oy- /MT /std:c++latest /EHsc /nologo /diagnostics:classic  /w14640)
 endif()
 
 if(MSVC AND NOT WIN32)
-    set(C_FLAGS ${C_FLAGS} /permissive- /GS /TP /W4 /wd"4065" /wd"4268" /wd"4324" /wd"5030" /Zc:wchar_t /Gm- /O2 /Ob2 /Zc:inline /fp:precise /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /D "_WIN32" /D "_CRT_SECURE_NO_WARNINGS" /D "NOMINMAX" /D "CMAKE_INTDIR=\"Release\"" /D "_MBCS" /errorReport:prompt /WX- /Zc:forScope /GR /Gd /MT /std:c++14 /EHsc /nologo /diagnostics:classic /w14640)
+    set(C_FLAGS ${C_FLAGS} /permissive- /GS /TP /W4 /wd"4065" /wd"4268" /wd"4324" /wd"5030" /Zc:wchar_t /Gm- /O2 /Ob2 /Zc:inline /fp:precise /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /D "_WIN32" /D "_CRT_SECURE_NO_WARNINGS" /D "NOMINMAX" /D "CMAKE_INTDIR=\"Release\"" /D "_MBCS" /errorReport:prompt /WX- /Zc:forScope /GR /Gd /MT /std:c++latest /EHsc /nologo /diagnostics:classic /w14640)
 endif()
