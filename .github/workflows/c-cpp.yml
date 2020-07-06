@@ -17,6 +17,7 @@ jobs:
             qtdir: "Qt5Widgets_DIR:PATH=./Qt/5.14.2/msvc2017_64/lib/cmake/Qt5Widgets"
             qtdll: "./Qt/5.14.2/msvc2017_64"
             build_type: "Release"
+            build_dir: "Build_Win64"
           -
             name: "Visual Studio 15 2017"
             os: windows-2016
@@ -24,6 +25,7 @@ jobs:
             qtdir: "Qt5Widgets_DIR:PATH=./Qt/5.14.2/msvc2017/lib/cmake/Qt5Widgets"
             qtdll: "./Qt/5.14.2/msvc2017"
             build_type: "Release"
+            build_dir: "Build_Win32"
 
     steps:
     - name: Checkout source code
@@ -43,27 +45,26 @@ jobs:
     - name: Configure
       shell: bash
       run: |
-        cmake -B ./build -G "${{ matrix.config.name }}" -DALSOFT_BUILD_ROUTER=ON -DALSOFT_REQUIRE_WINMM=ON -DALSOFT_REQUIRE_DSOUND=ON -DALSOFT_REQUIRE_WASAPI=ON -DALSOFT_EMBED_HRTF_DATA=YES -DCMAKE_BUILD_TYPE:STRING=${{ matrix.config.build_type }} -DFORCE_STATIC_VCRT:BOOL=ON -D"${{ matrix.config.qtdir }}"
+        cmake -B ./${{ matrix.config.build_dir }} -G "${{ matrix.config.name }}" -DALSOFT_BUILD_ROUTER=ON -DALSOFT_REQUIRE_WINMM=ON -DALSOFT_REQUIRE_DSOUND=ON -DALSOFT_REQUIRE_WASAPI=ON -DALSOFT_EMBED_HRTF_DATA=YES -DCMAKE_BUILD_TYPE:STRING=${{ matrix.config.build_type }} -DFORCE_STATIC_VCRT:BOOL=ON -D"${{ matrix.config.qtdir }}"
 
     - name: Build
       shell: bash
       run: |
-        cmake --build ./build --config ${{ matrix.config.build_type }} --clean-first
+        cmake --build ./${{ matrix.config.build_dir }} --config ${{ matrix.config.build_type }} --clean-first
 
     - name: Packing artifact
       shell: bash
       run: |
-        mkdir ./Build/Release/platforms
-        cp ${{ matrix.config.qtdll }}/bin/Qt5Core.dll ./Build/Release/
-        cp ${{ matrix.config.qtdll }}/bin/Qt5Gui.dll ./Build/Release/
-        cp ${{ matrix.config.qtdll }}/bin/Qt5Widgets.dll ./Build/Release/
-        cp ${{ matrix.config.qtdll }}/plugins/platforms/qwindows.dll ./Build/Release/platforms/
-        cd ./Build/Release
-        7z a -r -ssw -mx5 -t7z ${{ matrix.config.name }}_${{ matrix.config.build_type }}.7z
+        mkdir ./${{ matrix.config.build_dir }}/Release/platforms
+        cp ${{ matrix.config.qtdll }}/bin/Qt5Core.dll ./${{ matrix.config.build_dir }}/Release/
+        cp ${{ matrix.config.qtdll }}/bin/Qt5Gui.dll ./${{ matrix.config.build_dir }}/Release/
+        cp ${{ matrix.config.qtdll }}/bin/Qt5Widgets.dll ./${{ matrix.config.build_dir }}/Release/
+        cp ${{ matrix.config.qtdll }}/plugins/platforms/qwindows.dll ./${{ matrix.config.build_dir }}/Release/platforms/
+        cd ./${{ matrix.config.build_dir }}/Release
         cd ../../
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
-        name: Artifact
-        path: ./build/Release/${{ matrix.config.name }}.7z
+        path: ./${{ matrix.config.build_dir }}/Release/
+        name: ${{ matrix.config.name }} ${{ matrix.config.build_type }}
