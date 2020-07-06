@@ -30,17 +30,17 @@ jobs:
         ref: master
 
     - name: Configure
-      shell: bash
+      shell: cmd
       run: |
         cmake -B ${{ matrix.config.build_dir }} -G "${{ matrix.config.name }}" -DALSOFT_BUILD_ROUTER=ON -DALSOFT_REQUIRE_WINMM=ON -DALSOFT_REQUIRE_DSOUND=ON -DALSOFT_REQUIRE_WASAPI=ON -DALSOFT_EMBED_HRTF_DATA=YES -DCMAKE_BUILD_TYPE:STRING=${{ matrix.config.build_type }} -DFORCE_STATIC_VCRT:BOOL=ON
 
     - name: Build
-      shell: bash
+      shell: cmd
       run: |
         cmake --build ${{ matrix.config.build_dir }} --config ${{ matrix.config.build_type }} --clean-first
 
     - name: Packing artifact
-      shell: bash
+      shell: cmd
       run: |
         mkdir ${{ matrix.config.build_dir }}/Release/platforms
 
