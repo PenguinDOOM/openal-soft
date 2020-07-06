@@ -5,14 +5,14 @@ on: [push, pull_request]
 jobs:
   build:
     name: ${{ matrix.config.name }} | ${{ matrix.config.build_type }}
-    runs-on: ${{ matrix.config.os }}
+    runs-on: self-hosted
     strategy:
       fail-fast: false
       matrix:
         config:
           -
             name: "Visual Studio 15 2017 Win64"
-            os: windows-2016
+            //os: windows-2016
             qtarch: "win64_msvc2017_64"
             qtdir: "Qt5Widgets_DIR:PATH=./Qt/5.14.2/msvc2017_64/lib/cmake/Qt5Widgets"
             qtdll: "./Qt/5.14.2/msvc2017_64"
@@ -20,7 +20,7 @@ jobs:
             build_dir: "Build_Win64"
           -
             name: "Visual Studio 15 2017"
-            os: windows-2016
+            //os: windows-2016
             qtarch: "win32_msvc2017"
             qtdir: "Qt5Widgets_DIR:PATH=./Qt/5.14.2/msvc2017/lib/cmake/Qt5Widgets"
             qtdll: "./Qt/5.14.2/msvc2017"
