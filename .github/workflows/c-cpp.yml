@@ -32,7 +32,6 @@ jobs:
     - name: Configure
       shell: bash
       run: |
-        mkdir ${{ matrix.config.build_dir }}
         cmake -B ${{ matrix.config.build_dir }} -G "${{ matrix.config.name }}" -DALSOFT_BUILD_ROUTER=ON -DALSOFT_REQUIRE_WINMM=ON -DALSOFT_REQUIRE_DSOUND=ON -DALSOFT_REQUIRE_WASAPI=ON -DALSOFT_EMBED_HRTF_DATA=YES -DCMAKE_BUILD_TYPE:STRING=${{ matrix.config.build_type }} -DFORCE_STATIC_VCRT:BOOL=ON
 
     - name: Build
