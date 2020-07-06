@@ -16,7 +16,7 @@ jobs:
             qtarch: "win64_msvc2017_64"
             qtdir: "Qt5Widgets_DIR:PATH=./Qt/5.14.2/msvc2017_64/lib/cmake/Qt5Widgets"
             qtdll: "./Qt/5.14.2/msvc2017_64"
-            build_type: "Release"
+            build_type: "Debug"
             build_dir: "Build_Win64"
           -
             name: "Visual Studio 15 2017"
@@ -24,7 +24,7 @@ jobs:
             qtarch: "win32_msvc2017"
             qtdir: "Qt5Widgets_DIR:PATH=./Qt/5.14.2/msvc2017/lib/cmake/Qt5Widgets"
             qtdll: "./Qt/5.14.2/msvc2017"
-            build_type: "Release"
+            build_type: "Debug"
             build_dir: "Build_Win32"
 
     steps:
