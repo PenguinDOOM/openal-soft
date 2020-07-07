@@ -1,0 +1,42 @@
+name: OpenAL Soft Build Test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }} | ${{ matrix.config.build_type }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          -
+            name: "Visual Studio 15 2017 Win64"
+            os: windows-2016
+            qtarch: "win64_msvc2017_64"
+            build_type: "Debug"
+            build_dir: "Build_Win64"
+          -
+            name: "Visual Studio 15 2017"
+            os: windows-2016
+            qtarch: "win32_msvc2017"
+            build_type: "Debug"
+            build_dir: "Build_Win32"
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v2
+      with:
+        ref: master
+
+    - name: Configure
+      shell: cmd
+      run: |
+        cd .\al
+        "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.16.27023\bin\Hostx86\x86\cl.exe" -I "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.16.27023\include" -I "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.16.27023\atlmfc\include" -I "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\VS\include" -I "C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt" -I "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\VS\UnitTest\include" -I "C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um" -I "C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\shared" -I "C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\winrt" -I "C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\cppwinrt"/W4 /EHsc /c error.cpp
+        
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        path: .\${{ matrix.config.build_dir }}\
+        name: ${{ matrix.config.name }} ${{ matrix.config.build_type }}
