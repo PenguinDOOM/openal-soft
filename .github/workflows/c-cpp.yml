@@ -1,6 +1,6 @@
 name: OpenAL Soft Build Test
 
-//on: [push, pull_request]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -33,6 +33,8 @@ jobs:
       shell: cmd
       run: |
         cmake -B .\${{ matrix.config.build_dir }} -G "${{ matrix.config.name }}" -DALSOFT_BUILD_ROUTER=ON -DALSOFT_REQUIRE_WINMM=ON -DALSOFT_REQUIRE_DSOUND=ON -DALSOFT_REQUIRE_WASAPI=ON -DALSOFT_EMBED_HRTF_DATA=YES -DCMAKE_BUILD_TYPE:STRING=${{ matrix.config.build_type }} -DFORCE_STATIC_VCRT:BOOL=ON
+        cd .\al
+        "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.16.27023\bin\Hostx86\x86\cl.exe" -I "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.16.27023\include" -I "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.16.27023\atlmfc\include" -I "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\VS\include" -I "C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt" -I "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\VS\UnitTest\include" -I "C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um" -I "C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\shared" -I "C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\winrt" -I "C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\cppwinrt" -I "D:\a\openal-soft\openal-soft\include" -I "C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um" -I "D:\a\openal-soft\openal-soft\${{ matrix.config.build_dir }}" -I "D:\a\openal-soft\openal-soft" -I "D:\a\openal-soft\openal-soft\alc" -I "D:\a\openal-soft\openal-soft\common" /permissive- /GS /TP /W4 /wd"4065" /wd"4268" /wd"4324" /wd"5030" /Zc:wchar_t /Gm- /O2 /Ob2 /Zc:inline /fp:precise /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /D "AL_BUILD_LIBRARY" /D "AL_ALEXT_PROTOTYPES" /D "_WIN32" /D "_CRT_SECURE_NO_WARNINGS" /D "NOMINMAX" /D "CMAKE_INTDIR=\"Release\"" /D "soft_oal_EXPORTS" /D "_WINDLL" /D "_MBCS" /errorReport:prompt /WX- /Zc:forScope /GR /Gd /MT /std:c++14 /EHsc /nologo /diagnostics:classic /w14640 /c error.cpp
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
